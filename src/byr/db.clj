@@ -4,9 +4,10 @@
             [byr.utils :as utils]))
 
 (defn init []
-  (mg/connect!)
-  ;(mg/connect-via-uri! (System/genenv "MONGOLAB_URL"))
-  (mg/set-db! (mg/get-db "byr")))
+  (let [db-uri (System/getenv "MONGOLAB_URI")]
+    (if (nil? db-uri)
+      (mg/connect!)
+      (mg/connect-via-uri! db-uri))))
 
 (defn shorten [url]
   (let [counter (mc/find-and-modify "idspool" {:_id "current"}
