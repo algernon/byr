@@ -1,6 +1,6 @@
 (defproject byr "0.1.0-SNAPSHOT"
   :description "byr -- a simplistic URL shortener"
-  :url "http://byr.5ms.in/"
+  :url "http://5ms.in/byr"
   :license {:name "GNU GPL v3+"}
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [com.novemberain/monger "1.1.1"]
