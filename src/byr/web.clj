@@ -5,7 +5,7 @@
             [compojure.handler :as handler]
             [compojure.route :as route]))
 
-(def base-url "http://5ms.in/")
+(def base-url (System/getenv "BYR_BASE"))
 
 (defn- byr-url-get [id]
   (try
