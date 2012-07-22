@@ -50,7 +50,6 @@
   (GET "/:id" [id] (byr-redirect id))
   (POST "/" [longurl] (byr-add-uri longurl))
   (POST "/:id" [id longurl] (byr-add-uri id longurl))
-  (route/resources "/")
   (route/not-found (-> "Not found"
                        resp/response
                        (resp/content-type "text/plain"))))
