@@ -21,26 +21,18 @@
      :else (resp/redirect url))))
 
 (defn- byr-add-uri
-  ([uri]
-     
-     (let [r (db/add-map uri)]
-       (-> (str base-url (:_id r))
-           resp/response
-           (resp/content-type "text/plain"))))
+  [& params]
+  (try
+    (let [r (apply db/add-map params)]
+      (-> (str base-url (:_id r))
+          resp/response
+          (resp/content-type "text/plain")))
 
-  ([id uri]
-
-     (try
-       (let [r (db/add-map uri id)]
-         (-> (str base-url (:_id r))
-             resp/response
-             (resp/content-type "text/plain")))
-
-       (catch Exception e
-         (-> "id already exists"
-             resp/response
-             (resp/content-type "text/plain")
-             (resp/status 409))))))
+    (catch Exception e
+      (-> "id already exists"
+          resp/response
+          (resp/content-type "text/plain")
+          (resp/status 409)))))
 
 (defroutes byr-routes
   (GET "/" [] (resp/content-type 
@@ -49,7 +41,7 @@
   (GET "/+/:longurl" [longurl] (byr-add-uri longurl))
   (GET "/:id" [id] (byr-redirect id))
   (POST "/" [longurl] (byr-add-uri longurl))
-  (POST "/:id" [id longurl] (byr-add-uri id longurl))
+  (POST "/:id" [id longurl] (byr-add-uri longurl id))
   (route/not-found (-> "Not found"
                        resp/response
                        (resp/content-type "text/plain"))))
