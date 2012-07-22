@@ -17,8 +17,8 @@
 (defn- byr-redirect [id]
   (let [url (byr-url-get id)]
     (cond
-      (nil? url) nil
-      :else (resp/redirect url))))
+     (nil? url) nil
+     :else (resp/redirect url))))
 
 (defn- byr-add-uri
   ([uri]
