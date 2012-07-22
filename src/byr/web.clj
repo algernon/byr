@@ -20,8 +20,9 @@
      (nil? url) nil
      :else (resp/redirect url))))
 
-(defn- byr-add-uri
+(defn- byr-store-uri
   [& params]
+
   (try
     (let [r (apply db/add-map params)]
       (-> (str base-url (:_id r))
@@ -33,6 +34,22 @@
           resp/response
           (resp/content-type "text/plain")
           (resp/status 409)))))
+
+(defn- sane-url?
+  [url]
+
+  (when (re-find #"https?://" url)
+    true))
+
+(defn- byr-add-uri
+  [& params]
+
+  (if (sane-url? (first params))
+    (apply byr-store-uri params)
+    (-> "Invalid url; cannot shorten"
+        resp/response
+        (resp/content-type "text/plain")
+        (resp/status 400))))
 
 (defroutes byr-routes
   (GET "/" [] (resp/content-type 
