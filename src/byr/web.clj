@@ -2,6 +2,7 @@
   (:use [compojure.core])
   (:require [byr.db :as db]
             [ring.adapter.jetty :as ring]
+            [ring.util.response :as resp]
             [compojure.handler :as handler]
             [compojure.route :as route]))
 
@@ -19,12 +20,6 @@
       (nil? url) nil
       :else {:status 302
              :headers {"Location" url}})))
-
-(defn- byr-list-urls
-  []
-
-  {:headers {"Content-Type" "text/plain"}
-   :body "Not implemented yet"})
 
 (defn- byr-add-uri
   ([uri]
@@ -45,18 +40,13 @@
           :headers {"Content-Type" "text/plain"}
           :body "id already exists"}))))
 
-(defn- byr-root
-  [p]
-
-  (if (nil? (:longurl p))
-    (byr-list-urls)
-    (byr-add-uri (:longurl p))))
-
 (defroutes byr-routes
-  (GET "/" [:as {p :params}] (byr-root p))
+  (GET "/" [] (resp/resource-response "index.html" {:root "public"}))
+  (GET "/+/:longurl" [longurl] (byr-add-uri longurl))
   (GET "/:id" [id] (byr-redirect id))
   (POST "/" [longurl] (byr-add-uri longurl))
   (POST "/:id" [id longurl] (byr-add-uri id longurl))
+  (route/resources "/")
   (route/not-found {:headers {"Content-Type" "text/plain"} :body "Not found"}))
 
 (def app

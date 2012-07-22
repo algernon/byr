@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>byr - URL shortener</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Gergely Nagy" name="author">
+    <link href='http://fonts.googleapis.com/css?family=Special+Elite|Jura' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+      body { text-align: center; font-family: 'Jura', sans-serif; }
+      header { font-family: 'Special Elite', cursive; font-size: 200%; }
+      footer { margin-top: 2em; text-align: left; }
+      input[type=submit], input[type=text] { font-family: 'Jura', sans-serif; }
+      footer div { display: inline-block; }
+      #copyright { float: right; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>byr</h1>
+    </header>
+
+    <section>
+      <form action="/" method="POST">
+        <input type="text" name="longurl" size="60">
+        <br>
+        <input type="submit" value="Shorten">
+      </form>
+    </section>
+
+    <footer>
+      <hr>
+
+      <div id="powered-by">Powered by <a href="/byr">byr</a></div>
+      <div id="copyright">Copyright &copy; 2012 <a href="/asylum">Gergely Nagy</a></div>
+    </footer>
+  </body>
+</html>
