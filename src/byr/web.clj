@@ -1,6 +1,7 @@
 (ns byr.web
   (:use [compojure.core])
   (:require [byr.db :as db]
+            [byr.metrics :as m]
             [ring.adapter.jetty :as ring]
             [ring.util.response :as resp]
             [compojure.handler :as handler]
@@ -18,16 +19,21 @@
   (let [url (byr-url-get id)]
     (cond
      (nil? url) nil
-     :else (resp/redirect url))))
+     :else (do
+             (m/fire-metric (str "Expanded: " id))
+             (m/fire-metric "total-expansions")
+             (resp/redirect url)))))
 
 (defn- byr-store-uri
   [& params]
 
   (try
     (let [r (apply db/add-map params)]
-      (-> (str base-url (:_id r))
-          resp/response
-          (resp/content-type "text/plain")))
+      (do
+        (m/fire-metric "short-id-created")
+        (-> (str base-url (:_id r))
+            resp/response
+            (resp/content-type "text/plain"))))
 
     (catch Exception e
       (-> "id already exists"

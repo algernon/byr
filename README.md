@@ -6,6 +6,7 @@ a handful of features only:
  * Supports custom short URLs
  * Shortens automatically if no custom URL is supplied
  * Mappings are stored compactly in MongoDB
+ * Metrics are logged to RestfulMetrics
  * Offers a minimalistic index on the root URI
 
 ## API
@@ -26,13 +27,15 @@ set.
 
 ## Configuration
 
-The application will look for three environment variables:
+The application will look for the following environment variables:
 
  * `PORT`: If set, byr will listen on the specified port.
  * `MONGOLAB_URI`: If set, will connect to MongoDB using the URI
    specified. Otherwise to localhost.
  * `BYR_BASE`: The base URL for the application, will be prepended to
    the ids used for shortening.
+ * `RESTFUL_METRICS_API_KEY`: API key for [RestfulMetrics][3].
+ * `BYR_METRIC_APP_NAME`: Application name to use with RestfulMetrics.
 
 ## How it works
 
@@ -50,3 +53,4 @@ Distributed under the GNU GPL v3+.
 
  [1]: http://www.heroku.com/
  [2]: http://www.hotot.org/
+ [3]: http://www.restfulmetrics.com/
