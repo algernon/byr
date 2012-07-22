@@ -18,36 +18,42 @@
   (let [url (byr-url-get id)]
     (cond
       (nil? url) nil
-      :else {:status 302
-             :headers {"Location" url}})))
+      :else (resp/redirect url))))
 
 (defn- byr-add-uri
   ([uri]
      
      (let [r (db/add-map uri)]
-       {:headers {"Content-Type" "text/plain"}
-        :body (str base-url (:_id r))}))
+       (-> (str base-url (:_id r))
+           resp/response
+           (resp/content-type "text/plain"))))
 
   ([id uri]
 
      (try
        (let [r (db/add-map uri id)]
-         {:headers {"Content-Type" "text/plain"}
-          :body (str base-url (:_id r))})
+         (-> (str base-url (:_id r))
+             resp/response
+             (resp/content-type "text/plain")))
 
        (catch Exception e
-         {:status 409
-          :headers {"Content-Type" "text/plain"}
-          :body "id already exists"}))))
+         (-> "id already exists"
+             resp/response
+             (resp/content-type "text/plain")
+             (resp/status 409))))))
 
 (defroutes byr-routes
-  (GET "/" [] (resp/resource-response "index.html" {:root "public"}))
+  (GET "/" [] (resp/content-type 
+               (resp/resource-response "index.html" {:root "public"})
+               "text/html"))
   (GET "/+/:longurl" [longurl] (byr-add-uri longurl))
   (GET "/:id" [id] (byr-redirect id))
   (POST "/" [longurl] (byr-add-uri longurl))
   (POST "/:id" [id longurl] (byr-add-uri id longurl))
   (route/resources "/")
-  (route/not-found {:headers {"Content-Type" "text/plain"} :body "Not found"}))
+  (route/not-found (-> "Not found"
+                       resp/response
+                       (resp/content-type "text/plain"))))
 
 (def app
   (handler/site byr-routes))
