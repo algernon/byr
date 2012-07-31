@@ -58,9 +58,9 @@
         (resp/status 400))))
 
 (defroutes byr-routes
-  (GET "/" [] (resp/content-type 
-               (resp/resource-response "index.html" {:root "public"})
-               "text/html"))
+  (GET "/" [] (-> "index.html"
+                  (resp/resource-response {:root "public"})
+                  (resp/content-type "text/html")))
   (GET "/+/:longurl" [longurl] (byr-add-uri longurl))
   (GET "/:id" [id] (byr-redirect id))
   (POST "/" [longurl] (byr-add-uri longurl))
